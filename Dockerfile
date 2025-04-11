@@ -1,4 +1,4 @@
-FROM conanio/clang70
+FROM kitware/cmake:ci-debian12-aarch64-2025-03-31
 
 USER root
 
@@ -7,27 +7,19 @@ WORKDIR /app
 # Copy your project files and proceed with your build setup
 COPY . .
 
-# Install dependencies for building CMake
-RUN apt-get update && \
-    apt-get install -y wget build-essential libssl-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Download and build CMake from source
-RUN wget https://github.com/Kitware/CMake/releases/latest/download/cmake-4.0.1.tar.gz && \
-    tar -xzf cmake-4.0.1.tar.gz && \
-    cd cmake-4.0.1 && \
-    ./bootstrap && \
-    make -j$(nproc) && \
-    make install && \
-    cd .. && \
-    rm -rf cmake-4.0.1 cmake-4.0.1.tar.gz
+# Ensure all dependencies are updated
+RUN apt-get update && apt-get install -y \
+    cmake \
+    python3 \
+    python3-pip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Verify the updated CMake version
 RUN cmake --version
 
-# Update conan
-RUN pip install --upgrade conan
+# Install Conan, allowing system-wide installation
+RUN pip install --upgrade pip --break-system-packages \
+    && pip install --upgrade conan --break-system-packages
 
 # Verify conan version
 RUN conan --version

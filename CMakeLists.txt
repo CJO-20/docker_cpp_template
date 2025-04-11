@@ -1,5 +1,5 @@
 # Set the minimum required version of CMake
-cmake_minimum_required(VERSION 4.0.0)
+cmake_minimum_required(VERSION 3.25.1)
 
 # Project name
 project(Docker_Conan_Test VERSION 1.0.0 DESCRIPTION "Testing A C++ Project using Docker, Conan and CMake" LANGUAGES CXX)
