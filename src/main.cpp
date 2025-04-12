@@ -4,6 +4,7 @@
 #include <atomic>
 #include <vector>
 #include <chrono>
+#include <cstring>
 
 inline std::mutex print_mutex;
 inline std::atomic_uint64_t shared_counter(0ull);
@@ -15,7 +16,7 @@ void task (size_t thread_index)
     for (size_t i = shared_counter.fetch_add(1ull, std::memory_order_acquire); i < 100ull; i = shared_counter.fetch_add(1ull, std::memory_order_acq_rel))
     {
         print_lock.lock();
-        std::cout << "Thread " << thread_index << " has consumed " << i << '\n';
+        std::cout << "Thread " << thread_index << " has consumed " << i << ".\n";
         print_lock.unlock();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
